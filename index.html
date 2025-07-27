@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Soy Hans</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 800px;
+            width: 100%;
+            background-color: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            margin-top: 20px;
+        }
+        
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+            font-size: 2.5rem;
+            background: linear-gradient(to right, #4b6cb7, #182848);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .avatar-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 30px;
+        }
+        
+        .avatar {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 5px solid #4b6cb7;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s;
+        }
+        
+        .avatar:hover {
+            transform: scale(1.05);
+        }
+        
+        .text-display {
+            width: 100%;
+            min-height: 150px;
+            padding: 15px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            font-size: 1rem;
+            margin-bottom: 20px;
+            background-color: #f9f9f9;
+            color: #333;
+            overflow-y: auto;
+        }
+        
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        
+        button {
+            background: linear-gradient(to right, #4b6cb7, #182848);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: bold;
+            transition: all 0.3s;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+        }
+        
+        button:active {
+            transform: translateY(0);
+        }
+        
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .voice-selector {
+            width: 100%;
+            padding: 10px;
+            border-radius: 10px;
+            border: 2px solid #ddd;
+            margin-bottom: 20px;
+            font-size: 1rem;
+        }
+        
+        .settings {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .setting-group {
+            flex: 1;
+            min-width: 200px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #555;
+        }
+        
+        input[type="range"] {
+            width: 100%;
+            height: 8px;
+            -webkit-appearance: none;
+            background: #ddd;
+            border-radius: 5px;
+            outline: none;
+        }
+        
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 20px;
+            height: 20px;
+            background: #4b6cb7;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+        
+        .value-display {
+            text-align: center;
+            font-size: 0.9rem;
+            color: #666;
+            margin-top: 5px;
+        }
+        
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .avatar {
+                width: 150px;
+                height: 150px;
+            }
+            
+            button {
+                padding: 10px 20px;
+                font-size: 0.9rem;
+            }
+        }
+        
+        /* Animación de habla */
+        .speaking {
+            animation: pulse 0.5s infinite alternate;
+        }
+        
+        @keyframes pulse {
+            from {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(75, 108, 183, 0.4);
+            }
+            to {
+                transform: scale(1.03);
+                box-shadow: 0 0 0 10px rgba(75, 108, 183, 0);
+            }
+        }
+        
+        /* Animación de presentación */
+        @keyframes appear {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .presenting {
+            animation: appear 1s ease-out forwards;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Soy Hans</h1>
+        
+        <div class="avatar-container">
+            <img id="avatar" class="avatar" src="ba004f2479e1e1f67e45abb0a2384563.gif" alt="Avatar animado">
+        </div>
+        
+        <div id="textDisplay" class="text-display">
+            ¡Hola! Soy Hans. Es un placer conocerte. Permíteme presentarme formalmente. Soy un asistente virtual diseñado para ayudarte con diversas tareas. Puedo proporcionarte información, responder preguntas y acompañarte en tus actividades digitales. ¿En qué puedo ayudarte hoy?
+        </div>
+        
+        <div class="settings">
+            <div class="setting-group">
+                <label for="voiceSelect">Voz:</label>
+                <select id="voiceSelect" class="voice-selector"></select>
+            </div>
+            
+            <div class="setting-group">
+                <label for="rate">Velocidad: <span id="rateValue">1</span></label>
+                <input type="range" id="rate" min="0.5" max="2" step="0.1" value="1">
+            </div>
+            
+            <div class="setting-group">
+                <label for="pitch">Tono: <span id="pitchValue">1</span></label>
+                <input type="range" id="pitch" min="0.5" max="2" step="0.1" value="1">
+            </div>
+        </div>
+        
+        <div class="controls">
+            <button id="speakBtn">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                    <path d="M3.5 6.5A.5.5 0 0 1 4 7v1a4 4 0 0 0 8 0V7a.5.5 0 0 1 1 0v1a5 5 0 0 1-4.5 4.975V15h3a.5.5 0 0 1 0 1h-7a.5.5 0 0 1 0-1h3v-2.025A5 5 0 0 1 3 8V7a.5.5 0 0 1 .5-.5z"/>
+                    <path d="M10 8a2 2 0 1 1-4 0V3a2 2 0 1 1 4 0v5zM8 0a3 3 0 0 0-3 3v5a3 3 0 0 0 6 0V3a3 3 0 0 0-3-3z"/>
+                </svg>
+                Presentación
+            </button>
+            <button id="pauseBtn" disabled>
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                    <path d="M5.5 3.5A1.5 1.5 0 0 1 7 5v6a1.5 1.5 0 0 1-3 0V5a1.5 1.5 0 0 1 1.5-1.5zm5 0A1.5 1.5 0 0 1 12 5v6a1.5 1.5 0 0 1-3 0V5a1.5 1.5 0 0 1 1.5-1.5z"/>
+                </svg>
+                Pausar
+            </button>
+            <button id="stopBtn" disabled>
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                    <path d="M5 3.5h6A1.5 1.5 0 0 1 12.5 5v6a1.5 1.5 0 0 1-1.5 1.5H5A1.5 1.5 0 0 1 3.5 11V5A1.5 1.5 0 0 1 5 3.5z"/>
+                </svg>
+                Detener
+            </button>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const textDisplay = document.getElementById('textDisplay');
+            const speakBtn = document.getElementById('speakBtn');
+            const pauseBtn = document.getElementById('pauseBtn');
+            const stopBtn = document.getElementById('stopBtn');
+            const voiceSelect = document.getElementById('voiceSelect');
+            const rate = document.getElementById('rate');
+            const pitch = document.getElementById('pitch');
+            const rateValue = document.getElementById('rateValue');
+            const pitchValue = document.getElementById('pitchValue');
+            const avatar = document.getElementById('avatar');
+            
+            let speechSynthesis = window.speechSynthesis;
+            let speechUtterance = null;
+            let voices = [];
+            
+            // Texto predefinido
+            const presetText = textDisplay.textContent;
+            
+            // Animación inicial de presentación
+            avatar.classList.add('presenting');
+            setTimeout(() => {
+                avatar.classList.remove('presenting');
+            }, 1000);
+            
+            // Cargar voces disponibles
+            function loadVoices() {
+                voices = speechSynthesis.getVoices();
+                voiceSelect.innerHTML = '';
+                
+                // Filtrar voces en español
+                const spanishVoices = voices.filter(voice => 
+                    voice.lang.includes('es') || voice.lang.includes('ES')
+                );
+                
+                // Si hay voces en español, usarlas, de lo contrario mostrar todas
+                const voicesToShow = spanishVoices.length > 0 ? spanishVoices : voices;
+                
+                voicesToShow.forEach(voice => {
+                    const option = document.createElement('option');
+                    option.value = voice.name;
+                    option.textContent = `${voice.name} (${voice.lang})${voice.default ? ' - DEFAULT' : ''}`;
+                    voiceSelect.appendChild(option);
+                });
+                
+                // Seleccionar voz femenina por defecto si existe
+                const femaleVoice = voicesToShow.find(voice => 
+                    voice.name.includes('Female') || 
+                    voice.name.includes('femenina') || 
+                    voice.name.includes('Mujer')
+                );
+                
+                if (femaleVoice) {
+                    voiceSelect.value = femaleVoice.name;
+                }
+            }
+            
+            // Inicializar voces
+            speechSynthesis.onvoiceschanged = loadVoices;
+            loadVoices();
+            
+            // Actualizar valores de rango
+            rate.addEventListener('input', () => {
+                rateValue.textContent = rate.value;
+            });
+            
+            pitch.addEventListener('input', () => {
+                pitchValue.textContent = pitch.value;
+            });
+            
+            // Hablar
+            speakBtn.addEventListener('click', () => {
+                if (speechSynthesis.speaking) {
+                    speechSynthesis.cancel();
+                }
+                
+                speechUtterance = new SpeechSynthesisUtterance(presetText);
+                
+                const selectedVoice = voices.find(voice => voice.name === voiceSelect.value);
+                if (selectedVoice) {
+                    speechUtterance.voice = selectedVoice;
+                }
+                
+                speechUtterance.rate = parseFloat(rate.value);
+                speechUtterance.pitch = parseFloat(pitch.value);
+                
+                // Eventos para controlar los botones y la animación
+                speechUtterance.onstart = () => {
+                    avatar.classList.add('speaking');
+                    speakBtn.disabled = true;
+                    pauseBtn.disabled = false;
+                    stopBtn.disabled = false;
+                };
+                
+                speechUtterance.onend = () => {
+                    avatar.classList.remove('speaking');
+                    speakBtn.disabled = false;
+                    pauseBtn.disabled = true;
+                    stopBtn.disabled = true;
+                };
+                
+                speechUtterance.onpause = () => {
+                    avatar.classList.remove('speaking');
+                    pauseBtn.disabled = true;
+                    speakBtn.disabled = false;
+                };
+                
+                speechSynthesis.speak(speechUtterance);
+            });
+            
+            // Pausar
+            pauseBtn.addEventListener('click', () => {
+                speechSynthesis.pause();
+            });
+            
+            // Detener
+            stopBtn.addEventListener('click', () => {
+                speechSynthesis.cancel();
+            });
+        });
+    </script>
+</body>
+</html>
